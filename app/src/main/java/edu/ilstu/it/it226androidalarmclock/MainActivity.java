@@ -1,8 +1,14 @@
 package edu.ilstu.it.it226androidalarmclock;
 
+import android.app.AlarmManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.os.SystemClock;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +18,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +43,11 @@ public class MainActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+
+    private AlarmManager alarmManager;
+    private NotificationManager notificationManager;
+
+    static MainActivity instance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +86,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        instance = this;
+        createAlarmElapsed(5 * 1000);
+    }
+
+    void testNotification() {
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher).setContentTitle("Alarm")
+                .setContentText("Custom alarm message here!");
+        notificationManager.notify(0, builder.build());
+    }
+
+    void createAlarmElapsed(final long time) {
+        final Intent myIntent = new Intent(this, AlarmReceiver.class);
+        final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + time, pendingIntent);
     }
 
     @Override
