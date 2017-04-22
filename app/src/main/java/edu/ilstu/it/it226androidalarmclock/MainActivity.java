@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         instance = this;
         createAlarmElapsed(5 * 1000);
+        LocationAlarm.startLocationAlarm();
     }
 
     void testNotification() {
@@ -96,8 +97,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_about:
                 new AboutDialogFragment().show(getSupportFragmentManager(), "");
                 return super.onOptionsItemSelected(item);
-            //case R.id.action_settings:
-            //    break;
+            case R.id.action_settings:
+                // TODO if we're going to have a settings menu, instantiate it here
+                return super.onOptionsItemSelected(item);
             default:
                 return super.onOptionsItemSelected(item);
         }
