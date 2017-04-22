@@ -44,18 +44,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view){
                 // TODO open dialogue/activity to set new alarm
+                // TODO create activity for New Alarm
             }
         });
         buttonNewTimer.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 // TODO open dialogue/activity to set new timer
+                // TODO create activity for New Timer
             }
         });
         buttonConfigureLocationAlarm.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 // TODO open dialogue/activity to config location alarm
+                // TODO create activity for Location Alarm Settings
             }
         });
 

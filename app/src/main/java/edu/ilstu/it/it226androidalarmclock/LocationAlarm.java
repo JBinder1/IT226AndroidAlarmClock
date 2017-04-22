@@ -14,12 +14,13 @@ public class LocationAlarm {
         locationTimer = new CountDownTimer(customMinutes * 1000 * 60, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                // TODO
+                // TODO possible notification about how long until location alarm goes off?
             }
 
             @Override
             public void onFinish() {
-                // TODO If the location has not changed in the last ‘x’ minutes (‘x’ set by the user above in step a)
+                // TODO set off notification as described on assignment pdf
+                // If the location has not changed in the last ‘x’ minutes (‘x’ set by the user above in step a)
                 // this alarm will trigger and display a message “Get up and walk!” The alarm will only stop if the
                 // user changes the locations. After that, it goes back to monitoring the location movement.
             }
