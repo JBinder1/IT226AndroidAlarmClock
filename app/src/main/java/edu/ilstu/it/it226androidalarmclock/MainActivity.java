@@ -37,12 +37,12 @@ public class MainActivity extends AppCompatActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    // private SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    private ViewPager mViewPager;
+    // private ViewPager mViewPager;
 
     private AlarmManager alarmManager;
     private NotificationManager notificationManager;
@@ -58,33 +58,33 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        // mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+//        mViewPager = (ViewPager) findViewById(R.id.container);
+//        mViewPager.setAdapter(mSectionsPagerAdapter);
+//
+//        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+//        tabLayout.setupWithViewPager(mViewPager);
 
-        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                // TODO make this start an activity to create a new alarm, depending on which tab user is viewing
-                switch(tabLayout.getSelectedTabPosition()){
-                    case 0:
-                        // TODO have this open a thing to make a new Alarm
-                        break;
-                    case 1:
-                        // TODO have this open a thing to make a new timer Alarm
-                        break;
-                    case 2:
-                        break;  // The location alarm should not be able to do this
-                }
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+//                // TODO make this start an activity to create a new alarm, depending on which tab user is viewing
+//                switch(tabLayout.getSelectedTabPosition()){
+//                    case 0:
+//                        // TODO have this open a thing to make a new Alarm
+//                        break;
+//                    case 1:
+//                        // TODO have this open a thing to make a new timer Alarm
+//                        break;
+//                    case 2:
+//                        break;  // The location alarm should not be able to do this
+//                }
+//            }
+//        });
 
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -175,36 +175,36 @@ public class MainActivity extends AppCompatActivity {
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
-        }
-
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 3;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "Alarms";
-                case 1:
-                    return "Timers";
-                case 2:
-                    return "Location Alarm";
-            }
-            return null;
-        }
-    }
+//    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+//
+//        public SectionsPagerAdapter(FragmentManager fm) {
+//            super(fm);
+//        }
+//
+//        @Override
+//        public Fragment getItem(int position) {
+//            // getItem is called to instantiate the fragment for the given page.
+//            // Return a PlaceholderFragment (defined as a static inner class below).
+//            return PlaceholderFragment.newInstance(position + 1);
+//        }
+//
+//        @Override
+//        public int getCount() {
+//            // Show 3 total pages.
+//            return 3;
+//        }
+//
+//        @Override
+//        public CharSequence getPageTitle(int position) {
+//            switch (position) {
+//                case 0:
+//                    return "Alarms";
+//                case 1:
+//                    return "Timers";
+//                case 2:
+//                    return "Location Alarm";
+//            }
+//            return null;
+//        }
+//    }
 }

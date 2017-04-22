@@ -8,4 +8,7 @@
         \nSource and APK available at:
         \ngithub.com/JBinder1/IT226AndroidAlarmClock</string>
     <string name="dialog_about_positive">Close</string>
+    <string name="button_add_alarm">Add New Alarm</string>
+    <string name="button_add_timer">Add New Timer</string>
+    <string name="button_config_location">Configure Location Alarm</string>
 </resources>
