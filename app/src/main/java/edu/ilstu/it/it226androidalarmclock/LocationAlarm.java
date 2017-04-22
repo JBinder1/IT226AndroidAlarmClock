@@ -3,15 +3,18 @@ package edu.ilstu.it.it226androidalarmclock;
 import android.os.CountDownTimer;
 
 public class LocationAlarm {
-    private static final int DEFAULT_MINUTES = 2;
+    private static final long DEFAULT_MINUTES = 2;
     private static CountDownTimer locationTimer;
 
-    public static void startLocationAlarm(int customMinutes){
+    public static void startLocationAlarm(){
+        startLocationAlarm(DEFAULT_MINUTES);
+    }
+
+    public static void startLocationAlarm(long customMinutes){
         locationTimer = new CountDownTimer(customMinutes * 1000 * 60, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 // TODO
-                // .setText("Get moving in: " + millisUntilFinished / 1000);
             }
 
             @Override
