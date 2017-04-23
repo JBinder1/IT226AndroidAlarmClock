@@ -11,4 +11,7 @@
     <string name="button_add_alarm">Add New Alarm</string>
     <string name="button_add_timer">Add New Timer</string>
     <string name="button_config_location">Configure Location Alarm</string>
+    <string name="location_notification_title">Get up and walk!</string>
+    <string name="location_notification_content">Your location alarm has run out.</string>
+    <string name="alarm_notification_title">Alarm!</string>
 </resources>

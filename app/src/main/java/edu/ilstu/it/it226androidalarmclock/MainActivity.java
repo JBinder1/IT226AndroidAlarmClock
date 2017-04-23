@@ -22,10 +22,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
 
     private AlarmManager alarmManager;
     private NotificationManager notificationManager;
+    private static int notificationIdNum;
 
     static MainActivity instance;
 
@@ -33,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        instance = this;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -65,16 +71,37 @@ public class MainActivity extends AppCompatActivity {
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-        instance = this;
+        notificationIdNum = 0;
+
         createAlarmElapsed(5 * 1000);
-        LocationAlarm.startLocationAlarm();
+        // LocationAlarm.startLocationAlarm();
+        locationNotification();
     }
 
     void testNotification() {
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher).setContentTitle("Alarm")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("Alarm")
                 .setContentText("Custom alarm message here!");
         notificationManager.notify(0, builder.build());
+    }
+
+    // TODO make this display custom message
+    void alarmNotification(String message) {
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(getResources().getString(R.string.alarm_notification_title))
+                .setContentText(message);
+        notificationManager.notify(notificationIdNum++, builder.build());
+    }
+
+    void locationNotification() {
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(getResources().getString(R.string.location_notification_title))
+                .setContentText(getResources().getString(R.string.location_notification_content))
+                .setOngoing(true);
+        notificationManager.notify(2, builder.build());
     }
 
     void createAlarmElapsed(final long time) {
