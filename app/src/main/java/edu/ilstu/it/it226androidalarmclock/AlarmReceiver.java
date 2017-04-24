@@ -10,7 +10,7 @@ public final class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
-        MainActivity.instance.testNotification();
+        MainActivity.instance.alarmNotification(intent.getStringExtra(MainActivity.MESSAGE_EXTRA));
         setResultCode(Activity.RESULT_OK);
     }
 }

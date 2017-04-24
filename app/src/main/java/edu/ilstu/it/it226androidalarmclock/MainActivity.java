@@ -18,7 +18,11 @@ import android.view.View;
 
 import android.widget.Button;
 
+import java.util.Calendar;
+
 public class MainActivity extends AppCompatActivity {
+
+    public static final String MESSAGE_EXTRA = "MESSAGE_EXTRA";
 
     private AlarmManager alarmManager;
     private NotificationManager notificationManager;
@@ -65,17 +69,8 @@ public class MainActivity extends AppCompatActivity {
 
         notificationIdNum = 0;
 
-        createAlarmElapsed(5 * 1000);
         // LocationAlarm.startLocationAlarm();
-        locationNotification();
-    }
-
-    void testNotification() {
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Alarm")
-                .setContentText("Custom alarm message here!");
-        notificationManager.notify(0, builder.build());
+        // locationNotification();
     }
 
     // TODO make this display custom message
@@ -96,10 +91,15 @@ public class MainActivity extends AppCompatActivity {
         notificationManager.notify(2, builder.build());
     }
 
-    void createAlarmElapsed(final long time) {
+    void createAlarm(final String message, final int setYear, final int setMonth, final int setDay, final int setHour, final int setMinute) {
         final Intent myIntent = new Intent(this, AlarmReceiver.class);
+        myIntent.putExtra(MESSAGE_EXTRA, message);
         final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + time, pendingIntent);
+
+        final Calendar calendar = Calendar.getInstance();
+        calendar.set(setYear, setMonth, setDay, setHour, setMinute);
+
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,SystemClock.elapsedRealtime() + calendar.getTimeInMillis() - System.currentTimeMillis(), pendingIntent);
     }
 
     @Override
