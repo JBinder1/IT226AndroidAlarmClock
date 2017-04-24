@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     public AlarmManager alarmManager;
     public NotificationManager notificationManager;
     private static int notificationIdNum;
-    // GoogleCalendarManager googleCalendarManager;
 
     public static MainActivity instance;
 
@@ -120,8 +119,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
         acquireGooglePlayServices();
         chooseAccount();
-
-        // googleCalendarManager = new GoogleCalendarManager(this);
 
         LocationAlarm.startLocationAlarm();
     }
