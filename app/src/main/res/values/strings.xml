@@ -14,4 +14,6 @@
     <string name="location_notification_title">Get up and walk!</string>
     <string name="location_notification_content">Your location alarm has run out.</string>
     <string name="alarm_notification_title">Alarm!</string>
+    <string name="title_activity_alarm_setup">Alarm Setup</string>
+    <string name="error_alarm_setup">Error: Make sure all fields are filled out.</string>
 </resources>
