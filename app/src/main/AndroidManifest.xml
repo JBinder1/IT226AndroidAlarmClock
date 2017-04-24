@@ -47,6 +47,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.ilstu.it.it226androidalarmclock.MainActivity" />
         </activity>
+        <activity
+            android:name=".LocationAlarmSettings"
+            android:label="@string/title_activity_location_alarm_settings"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.ilstu.it.it226androidalarmclock.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,11 @@ import android.widget.TimePicker;
 import java.util.Calendar;
 
 public class TimerSetupActivity extends AppCompatActivity {
+    String setMessage;
+    int setMinute;
+    EditText editTextMinutes;
+    EditText editTextMessage;
+    // EditText editTextLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,42 +31,53 @@ public class TimerSetupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_timer_setup);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        setDay = -1;
-        setMonth = -1;
-        setYear = -1;
-        setHour = -1;
+        setMessage = "";
         setMinute = -1;
 
-        editTextTime = (EditText) findViewById(R.id.editTextTime);
-        editTextDate = (EditText) findViewById(R.id.editTextDate);
+        editTextMinutes = (EditText) findViewById(R.id.editTextMinute);
         editTextMessage = (EditText) findViewById(R.id.editTextMessage);
+        // editTextLocation = (EditText) findViewById(R.id.editTextLocation);
 
         final Button buttonAlarmOkay = (Button) findViewById(R.id.buttonAlarmOkay);
         buttonAlarmOkay.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                if(setDay > -1 && setMonth > -1 && setYear > -1 && setHour > -1 && setMinute > -1){
-                    // TODO create new alarm from this info
-                    cancelSetup();
+                try {
+                    setMinute = Integer.parseInt(editTextMinutes.getText().toString());
+                    setMessage = editTextMessage.getText().toString();
+                    // setLocation = editTextLocation.toString();
+                }catch(Exception e){
+                    Snackbar.make(v, getResources().getString(R.string.error_alarm_setup), Snackbar.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+
+                Calendar cal = Calendar.getInstance();
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+                int hour = cal.get(Calendar.DAY_OF_MONTH);
+                int minute = cal.get(Calendar.MINUTE) + setMinute;
+
+                if(minute > 60){
+                    minute-=60;
+                    hour++;
+                }
+                if(hour > 24){
+                    hour-=24;
+                    day++;
+                }
+
+                if(setMinute > -1){
+                    MainActivity.instance.createAlarm(setMessage, year, month, day, hour, minute);
+                    finish();
                 }else {
                     Snackbar.make(v, getResources().getString(R.string.error_alarm_setup), Snackbar.LENGTH_LONG).show();
                 }
             }
         });
-        final Button buttonAlarmCancel = (Button) findViewById(R.id.buttonAlarmCancel);
     }
-
-    public EditText editTextTime;
-    public EditText editTextDate;
-    public EditText editTextMessage;
-
-    int setDay;
-    int setMonth;
-    int setYear;
-    int setHour;
-    int setMinute;
 
     public void cancelSetup(){
         setContentView(super.findViewById(R.id.main_content));
@@ -97,24 +114,4 @@ public class TimerSetupActivity extends AppCompatActivity {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute){
         }
     }
-
-    private DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            editTextDate.setText(month + " / " + dayOfMonth + " / " + year);
-            setDay = dayOfMonth;
-            setMonth = month;
-            setYear = year;
-        }
-    };
-
-    private TimePickerDialog.OnTimeSetListener timeListener = new TimePickerDialog.OnTimeSetListener() {
-        @Override
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            editTextTime.setText(hourOfDay + ":" + minute);
-            setHour = hourOfDay;
-            setMinute = minute;
-        }
-    };
-
 }

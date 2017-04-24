@@ -1,34 +1,61 @@
 package edu.ilstu.it.it226androidalarmclock;
 
+import android.location.Location;
+import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.location.LocationListener;
 
-public class LocationAlarm {
-    private static final long DEFAULT_MINUTES = 2;
-    private CountDownTimer locationTimer;
+public class LocationAlarm implements LocationListener {
+    static private final long DEFAULT_MINUTES = 2;
+    static private CountDownTimer locationTimer;
+    static private long recentCustomMinutes;
+    static boolean isGoingOff;
 
-    public void startLocationAlarm(){
+    static public void startLocationAlarm(){
         startLocationAlarm(DEFAULT_MINUTES);
     }
 
-    public void startLocationAlarm(long customMinutes){
-//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-//                .setSmallIcon(null)
-//                .setContentTitle("Get up and walk!").setContentText("Your location alarm has ended.");
-//        Intent resultIntent = new Intent(this, ResultActivity.class);
-//        locationTimer = new CountDownTimer(customMinutes * 1000 * 60, 1000) {
-//            @Override
-//            public void onTick(long millisUntilFinished) {
-//                // TODO possible notification about how long until location alarm goes off?
-//            }
-//
-//            @Override
-//            public void onFinish() {
-//                // TODO set off notification as described on assignment pdf
-//                // If the location has not changed in the last ‘x’ minutes (‘x’ set by the user above in step a)
-//                // this alarm will trigger and display a message “Get up and walk!” The alarm will only stop if the
-//                // user changes the locations. After that, it goes back to monitoring the location movement.
-//
-//            }
-//        }.start();
+    static public void startLocationAlarm(long customMinutes){
+        recentCustomMinutes = customMinutes;
+
+        locationTimer = new CountDownTimer(customMinutes * 1000 * 60, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                // MainActivity.instance.locationNotification(millisUntilFinished / 1000);
+            }
+
+            @Override
+            public void onFinish() {
+                isGoingOff = true;
+                MainActivity.instance.locationNotification();
+            }
+        }.start();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        if(isGoingOff){
+            MainActivity.instance.notificationManager.cancel(2);
+            locationTimer.cancel();
+            isGoingOff = false;
+        }
+        MainActivity.instance.notificationManager.cancel(2);
+        locationTimer.cancel();
+        startLocationAlarm(recentCustomMinutes);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 }

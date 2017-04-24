@@ -11,71 +11,78 @@
     tools:layout_editor_absoluteX="0dp">
 
 
-    <LinearLayout
-        android:layout_width="367dp"
-        android:layout_height="414dp"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp">
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
 
-        <EditText
-            android:id="@+id/editTextTime"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="20dp"
-            android:ems="10"
-            android:hint="Time"
-            android:inputType="time"
-            android:onClick="showTimePickerDialog" />
+            android:orientation="vertical"
+            android:weightSum="1"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp">
 
-        <EditText
-            android:id="@+id/editTextDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/editTextTime"
-            android:layout_marginTop="20dp"
-            android:ems="10"
-            android:hint="Date"
-            android:inputType="date" />
+            <DatePicker
+                android:id="@+id/datePicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:headerBackground="@color/colorPrimary" />
 
-        <EditText
-            android:id="@+id/editTextMessage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/editTextDate"
-            android:layout_marginTop="20dp"
-            android:ems="10"
-            android:hint="Message"
-            android:inputType="text" />
+            <EditText
+                android:id="@+id/editTextTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/datePicker"
+                android:ems="10"
+                android:hint="00:00"
+                android:inputType="time" />
 
-        <Button
-            android:id="@+id/buttonAlarmOkay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/editTextMessage"
-            android:layout_marginTop="19dp"
-            android:layout_toStartOf="@+id/buttonAlarmCancel"
-            android:text="Okay"
-            tools:layout_editor_absoluteX="111dp"
-            tools:layout_editor_absoluteY="239dp" />
+            <EditText
+                android:id="@+id/editTextMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="20dp"
+                android:ems="10"
+                android:hint="Message"
+                android:inputType="text" />
 
-        <Button
-            android:id="@+id/buttonAlarmCancel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/buttonAlarmOkay"
-            android:layout_alignBottom="@+id/buttonAlarmOkay"
-            android:layout_alignParentEnd="true"
-            android:onClick="cancelSetup"
-            android:text="Cancel"
-            tools:layout_editor_absoluteX="199dp" />
+            <EditText
+                android:id="@+id/editTextLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/editTextMessage"
+                android:layout_marginTop="20dp"
+                android:ems="10"
+                android:hint="Location"
+                android:inputType="text|textPostalAddress" />
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/buttonAlarmOkay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/editTextMessage"
+                android:layout_marginTop="19dp"
+                android:layout_toStartOf="@+id/buttonAlarmCancel"
+                android:text="Okay"
+                tools:layout_editor_absoluteX="111dp"
+                tools:layout_editor_absoluteY="239dp" />
+
+            <Button
+                android:id="@+id/buttonAlarmCancel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="74dp"
+                android:text="Cancel"
+                tools:layout_editor_absoluteX="199dp" />
+        </LinearLayout>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>

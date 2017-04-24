@@ -13,8 +13,22 @@
     <string name="button_config_location">Configure Location Alarm</string>
     <string name="location_notification_title">Get up and walk!</string>
     <string name="location_notification_content">Your location alarm has run out.</string>
+    <string name="location_notification_warning_title">Location Alarm</string>
+    <string name="location_notification_warning_content">Get moving in: </string>
     <string name="alarm_notification_title">Alarm!</string>
     <string name="title_activity_alarm_setup">Alarm Setup</string>
     <string name="error_alarm_setup">Error: Make sure all fields are filled out.</string>
     <string name="title_activity_timer_setup">Timer Setup</string>
+    <string name="title_activity_location_alarm_settings">Location Alarm Settings</string>
+    <string name="location_alarm_desc">The location alarm goes off after a few
+        minutes if you do not get up and move. Here you can set the number of
+        minutes it takes to go off.</string>
+    <string-array name="time_zones">
+        <item>Pacific</item>
+        <item>Mountain</item>
+        <item>Central</item>
+        <item>Eastern</item>
+    </string-array>
+    <string name="location_set_at">Set at: </string>
+    <string name="success">Successfully created!</string>
 </resources>
