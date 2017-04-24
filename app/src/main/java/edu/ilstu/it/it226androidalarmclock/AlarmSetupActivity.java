@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
+import java.util.Calendar;
+
 public class AlarmSetupActivity extends AppCompatActivity {
     public EditText editTextMessage;
     public EditText editTextLocation;
@@ -41,9 +43,17 @@ public class AlarmSetupActivity extends AppCompatActivity {
                 setMessage = editTextMessage.getText().toString();
                 setLocation = editTextLocation.getText().toString();
                 String[] time = editTextTime.getText().toString().split(":");
-                int hour = Integer.parseInt(time[0]);
-                int minute = Integer.parseInt(time[1]);
-                MainActivity.instance.createAlarm(setMessage, datePicker.getMonth(), datePicker.getDayOfMonth(), datePicker.getYear(), hour, minute);
+
+                Calendar cal = Calendar.getInstance();
+                cal.set(Calendar.HOUR, Integer.parseInt(time[0]));
+                cal.set(Calendar.MINUTE, Integer.parseInt(time[1]));
+                cal.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
+                cal.set(Calendar.MONTH, datePicker.getMonth());
+                cal.set(Calendar.YEAR, datePicker.getYear());
+
+                MainActivity.instance.createAlarm(setMessage, setLocation, cal);
+                // MainActivity.instance.googleCalendarManager.addEvent(setMessage, cal);
+
                 finish();
             }
         });

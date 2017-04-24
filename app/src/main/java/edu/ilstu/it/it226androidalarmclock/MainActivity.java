@@ -41,7 +41,6 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
-import com.google.api.services.calendar.model.Events;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -68,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     public AlarmManager alarmManager;
     public NotificationManager notificationManager;
     private static int notificationIdNum;
+    // GoogleCalendarManager googleCalendarManager;
 
     public static MainActivity instance;
 
@@ -112,8 +112,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-        notificationIdNum = 10;
-
         alarms = new ArrayList<>();
 
         mCredential = GoogleAccountCredential.usingOAuth2(
@@ -123,6 +121,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         acquireGooglePlayServices();
         chooseAccount();
 
+        // googleCalendarManager = new GoogleCalendarManager(this);
+
         LocationAlarm.startLocationAlarm();
     }
 
@@ -131,8 +131,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(getResources().getString(R.string.alarm_notification_title))
                 .setContentText(message);
-        notificationManager.notify(notificationIdNum, builder.build());
-        notificationIdNum++;
+        notificationManager.notify((int)Calendar.getInstance().getTimeInMillis(), builder.build());
     }
 
     void locationNotification() {
@@ -144,18 +143,15 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         notificationManager.notify(2, builder.build());
     }
 
-    void createAlarm(final String message, final int setYear, final int setMonth, final int setDay, final int setHour, final int setMinute) {
+    void createAlarm(final String message, final String location, Calendar cal) {
         final Intent myIntent = new Intent(this, AlarmReceiver.class);
         myIntent.putExtra(MESSAGE_EXTRA, message);
         final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
 
-        final Calendar calendar = Calendar.getInstance();
-        calendar.set(setYear, setMonth, setDay, setHour, setMinute);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + cal.getTimeInMillis() - System.currentTimeMillis(), pendingIntent);
+        alarms.add(new Alarm(message, location, cal.getTimeInMillis(), myIntent, pendingIntent));
 
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + calendar.getTimeInMillis() - System.currentTimeMillis(), pendingIntent);
-        alarms.add(new Alarm(message, calendar.getTimeInMillis(), myIntent, pendingIntent));
-
-        new MakeRequestTask(mCredential, message, calendar).execute();
+        new MakeRequestTask(mCredential, message, cal).execute();
     }
 
     @Override
