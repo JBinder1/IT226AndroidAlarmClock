@@ -1,10 +1,6 @@
 package edu.ilstu.it.it226androidalarmclock;
 
-import android.content.Intent;
-import android.location.Location;
 import android.os.CountDownTimer;
-import android.app.NotificationManager;
-import android.support.v4.app.NotificationCompat;
 
 public class LocationAlarm {
     private static final long DEFAULT_MINUTES = 2;
