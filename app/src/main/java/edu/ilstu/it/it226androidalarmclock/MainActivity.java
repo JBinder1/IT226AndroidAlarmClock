@@ -18,7 +18,9 @@ import android.view.View;
 
 import android.widget.Button;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private static int notificationIdNum;
 
     static MainActivity instance;
+
+    private List<Alarm> alarms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
 
         notificationIdNum = 0;
 
+        alarms = new ArrayList<>();
+
         // LocationAlarm.startLocationAlarm();
         // locationNotification();
     }
@@ -98,8 +104,9 @@ public class MainActivity extends AppCompatActivity {
 
         final Calendar calendar = Calendar.getInstance();
         calendar.set(setYear, setMonth, setDay, setHour, setMinute);
-
+ 
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,SystemClock.elapsedRealtime() + calendar.getTimeInMillis() - System.currentTimeMillis(), pendingIntent);
+        alarms.add(new Alarm(message, calendar.getTimeInMillis(), myIntent, pendingIntent));
     }
 
     @Override
