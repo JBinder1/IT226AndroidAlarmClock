@@ -5,18 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="edu.ilstu.it.it226androidalarmclock.AlarmSetupActivity"
-    tools:showIn="@layout/activity_alarm_setup"
-    tools:layout_editor_absoluteY="81dp"
-    tools:layout_editor_absoluteX="0dp">
-
+    tools:context="edu.ilstu.it.it226androidalarmclock.TimerSetupActivity"
+    tools:showIn="@layout/activity_timer_setup">
 
     <LinearLayout
-        android:layout_width="367dp"
-        android:layout_height="414dp"
+        android:layout_width="368dp"
+        android:layout_height="495dp"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp">
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="8dp">
 
         <EditText
             android:id="@+id/editTextTime"
@@ -72,10 +69,10 @@
             android:layout_alignBaseline="@+id/buttonAlarmOkay"
             android:layout_alignBottom="@+id/buttonAlarmOkay"
             android:layout_alignParentEnd="true"
+            android:elevation="0dp"
             android:onClick="cancelSetup"
             android:text="Cancel"
             tools:layout_editor_absoluteX="199dp" />
 
     </LinearLayout>
-
 </android.support.constraint.ConstraintLayout>

@@ -16,4 +16,5 @@
     <string name="alarm_notification_title">Alarm!</string>
     <string name="title_activity_alarm_setup">Alarm Setup</string>
     <string name="error_alarm_setup">Error: Make sure all fields are filled out.</string>
+    <string name="title_activity_timer_setup">Timer Setup</string>
 </resources>

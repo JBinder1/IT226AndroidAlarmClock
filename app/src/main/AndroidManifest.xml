@@ -33,6 +33,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.ilstu.it.it226androidalarmclock.MainActivity" />
         </activity>
+        <activity
+            android:name=".TimerSetupActivity"
+            android:label="@string/title_activity_timer_setup"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.ilstu.it.it226androidalarmclock.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
