@@ -56,24 +56,13 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     public static final String MESSAGE_EXTRA = "MESSAGE_EXTRA";
 
-    private static final String[] SCOPES = {CalendarScopes.CALENDAR};
+    NotificationManager notificationManager;
+    GoogleCalendarManager googleCalendarManager;
+    AlarmsManager alarmsManager;
 
-    static final int REQUEST_ACCOUNT_PICKER = 1000;
-    static final int REQUEST_AUTHORIZATION = 1001;
-    static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
-    static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
-
-    private static final String PREF_ACCOUNT_NAME = "accountName";
-
-    private AlarmManager alarmManager;
-    private NotificationManager notificationManager;
     private static int notificationIdNum;
 
     static MainActivity instance;
-
-    private List<Alarm> alarms;
-
-    GoogleAccountCredential mCredential;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,21 +98,14 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             }
         });
 
-        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         notificationIdNum = 0;
 
-        alarms = new ArrayList<>();
+        alarmsManager = new AlarmsManager(this);
+        googleCalendarManager = new GoogleCalendarManager(this);
 
-        mCredential = GoogleAccountCredential.usingOAuth2(
-                getApplicationContext(), Arrays.asList(SCOPES))
-                .setBackOff(new ExponentialBackOff());
-
-        acquireGooglePlayServices();
-        chooseAccount();
-
-        new MakeRequestTask(mCredential, "test!", Calendar.getInstance()).execute();
         // LocationAlarm.startLocationAlarm();
         // locationNotification();
     }
@@ -144,20 +126,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 .setContentText(getResources().getString(R.string.location_notification_content))
                 .setOngoing(true);
         notificationManager.notify(2, builder.build());
-    }
-
-    void createAlarm(final String message, final int setYear, final int setMonth, final int setDay, final int setHour, final int setMinute) {
-        final Intent myIntent = new Intent(this, AlarmReceiver.class);
-        myIntent.putExtra(MESSAGE_EXTRA, message);
-        final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
-
-        final Calendar calendar = Calendar.getInstance();
-        calendar.set(setYear, setMonth, setDay, setHour, setMinute);
-
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + calendar.getTimeInMillis() - System.currentTimeMillis(), pendingIntent);
-        alarms.add(new Alarm(message, calendar.getTimeInMillis(), myIntent, pendingIntent));
-
-        new MakeRequestTask(mCredential, message, calendar).execute();
     }
 
     @Override
@@ -190,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case REQUEST_ACCOUNT_PICKER:
+            case GoogleCalendarManager.REQUEST_ACCOUNT_PICKER:
                 if (resultCode == RESULT_OK && data != null &&
                         data.getExtras() != null) {
                     String accountName =
@@ -199,9 +167,9 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                         SharedPreferences settings =
                                 getPreferences(Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = settings.edit();
-                        editor.putString(PREF_ACCOUNT_NAME, accountName);
+                        editor.putString(GoogleCalendarManager.PREF_ACCOUNT_NAME, accountName);
                         editor.apply();
-                        mCredential.setSelectedAccountName(accountName);
+                        googleCalendarManager.mCredential.setSelectedAccountName(accountName);
                     }
                 }
                 break;
@@ -265,84 +233,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         newFragment.show(getSupportFragmentManager(), "timePicker");
     }
 
-    /**
-     * Attempts to set the account used with the API credentials. If an account
-     * name was previously saved it will use that one; otherwise an account
-     * picker dialog will be shown to the user. Note that the setting the
-     * account to use with the credentials object requires the app to have the
-     * GET_ACCOUNTS permission, which is requested here if it is not already
-     * present. The AfterPermissionGranted annotation indicates that this
-     * function will be rerun automatically whenever the GET_ACCOUNTS permission
-     * is granted.
-     */
-    @AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
-    private void chooseAccount() {
-        if (EasyPermissions.hasPermissions(
-                this, Manifest.permission.GET_ACCOUNTS)) {
-            String accountName = getPreferences(Context.MODE_PRIVATE)
-                    .getString(PREF_ACCOUNT_NAME, null);
-            if (accountName != null) {
-                mCredential.setSelectedAccountName(accountName);
-            } else {
-                // Start a dialog from which the user can choose an account
-                startActivityForResult(
-                        mCredential.newChooseAccountIntent(),
-                        REQUEST_ACCOUNT_PICKER);
-            }
-        } else {
-            // Request the GET_ACCOUNTS permission via a user dialog
-            EasyPermissions.requestPermissions(
-                    this,
-                    "This app needs to access your Google account (via Contacts).",
-                    REQUEST_PERMISSION_GET_ACCOUNTS,
-                    Manifest.permission.GET_ACCOUNTS);
-        }
-    }
 
-    /**
-     * Check that Google Play services APK is installed and up to date.
-     *
-     * @return true if Google Play Services is available and up to
-     * date on this device; false otherwise.
-     */
-    private boolean isGooglePlayServicesAvailable() {
-        GoogleApiAvailability apiAvailability =
-                GoogleApiAvailability.getInstance();
-        final int connectionStatusCode =
-                apiAvailability.isGooglePlayServicesAvailable(this);
-        return connectionStatusCode == ConnectionResult.SUCCESS;
-    }
-
-    /**
-     * Attempt to resolve a missing, out-of-date, invalid or disabled Google
-     * Play Services installation via a user dialog, if possible.
-     */
-    private void acquireGooglePlayServices() {
-        GoogleApiAvailability apiAvailability =
-                GoogleApiAvailability.getInstance();
-        final int connectionStatusCode =
-                apiAvailability.isGooglePlayServicesAvailable(this);
-        if (apiAvailability.isUserResolvableError(connectionStatusCode)) {
-            showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode);
-        }
-    }
-
-    /**
-     * Display an error dialog showing that Google Play Services is missing
-     * or out of date.
-     *
-     * @param connectionStatusCode code describing the presence (or lack of)
-     *                             Google Play Services on this device.
-     */
-    void showGooglePlayServicesAvailabilityErrorDialog(
-            final int connectionStatusCode) {
-        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-        Dialog dialog = apiAvailability.getErrorDialog(
-                MainActivity.this,
-                connectionStatusCode,
-                REQUEST_GOOGLE_PLAY_SERVICES);
-        dialog.show();
-    }
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
@@ -363,85 +254,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage(R.string.dialog_about_text).setPositiveButton(R.string.dialog_about_positive, null);
             return builder.create();
-        }
-    }
-
-    private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
-        private com.google.api.services.calendar.Calendar mService = null;
-        private Exception mLastError = null;
-        private String message;
-        private Calendar calendar;
-
-        MakeRequestTask(GoogleAccountCredential credential, String message, Calendar calendar) {
-            HttpTransport transport = AndroidHttp.newCompatibleTransport();
-            JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-            mService = new com.google.api.services.calendar.Calendar.Builder(
-                    transport, jsonFactory, credential)
-                    .setApplicationName("Google Calendar API Android Quickstart")
-                    .build();
-            this.message = message;
-            this.calendar = calendar;
-        }
-
-        @Override
-        protected List<String> doInBackground(Void... params) {
-            try {
-                getDataFromApi();
-                return new ArrayList<>();
-            } catch (Exception e) {
-                mLastError = e;
-                cancel(true);
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(List<String> output) {
-            if (output == null || output.size() == 0) {
-                Log.d("MakeRequestTask", "No results gathered");
-            } else {
-                output.add(0, "Data retrieved using the Google Calendar API:");
-                Log.d("MakeRequestTask", TextUtils.join("\n", output));
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            if (mLastError != null) {
-                if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
-                    Log.d("MakeRequestTask", "Google Play Services unavailable!");
-                } else if (mLastError instanceof UserRecoverableAuthIOException) {
-                    startActivityForResult(
-                            ((UserRecoverableAuthIOException) mLastError).getIntent(),
-                            MainActivity.REQUEST_AUTHORIZATION);
-                } else {
-                    Log.d("MakeRequestTask", "The following error occurred:\n"
-                            + mLastError.getMessage());
-                }
-            } else {
-                Log.d("MakeRequestTask", "Request cancelled");
-            }
-        }
-
-        /**
-         * Fetch a list of the next 10 events from the primary calendar.
-         *
-         * @return List of Strings describing returned events.
-         * @throws IOException
-         */
-        private void getDataFromApi() throws IOException {
-            Event event = new Event()
-                    .setSummary(message);
-
-            DateTime startDateTime = new DateTime(calendar.getTime());
-            EventDateTime start = new EventDateTime()
-                    .setDateTime(startDateTime);
-            event.setStart(start);
-            event.setEnd(start);
-
-            String calendarId = "primary";
-            event = mService.events().insert(calendarId, event).execute();
-            Log.d("MakeRequestTask", "Event created: %s\n" + event.getHtmlLink());
         }
     }
 
